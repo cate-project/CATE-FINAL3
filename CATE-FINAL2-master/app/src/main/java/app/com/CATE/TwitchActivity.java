@@ -65,11 +65,12 @@ public class TwitchActivity extends AppCompatActivity {
     ListView listview;
     int size;
     String userID = "";
+    String videoID = "";
     public static int video_index;
-    int u_v_status,likes,dislikes;
+    int u_v_status, likes, dislikes;
     public static String userName = "";
-    TextView textViewName,countLike,countDisLike;
-    ImageView imageButtonLike,imageButtonDisLike,declaration_posting;
+    TextView textViewName, countLike, countDisLike;
+    ImageView imageButtonLike, imageButtonDisLike, declaration_posting;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,21 +78,20 @@ public class TwitchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_twitch);
         web = (WebView) findViewById(R.id.twitchPlayer);
 
-        youtubeDataModel = getIntent().getParcelableExtra(YoutubeDataModel.class.toString());
-        Log.e("", youtubeDataModel.getDescription());
-        Intent intent = getIntent();
-        String videoId = youtubeDataModel.getVideo_id();
-        userName = intent.getStringExtra("userName");
-        video_index = intent.getIntExtra("video_index", 0);
-        u_v_status = intent.getIntExtra("u_v_status",0);
-        likes = intent.getIntExtra("likes",0);
-        dislikes = intent.getIntExtra("dislikes",0);
+        userName = MainActivity.strName;
 
+        Intent intent = getIntent();
+        youtubeDataModel = intent.getParcelableExtra(YoutubeDataModel.class.toString());
+        videoID = youtubeDataModel.getVideo_id();
+        video_index = youtubeDataModel.getVideo_index();
+        likes = youtubeDataModel.getLikes();
+        dislikes = youtubeDataModel.getDislikes();
+        u_v_status = intent.getIntExtra("u_v_status",0);
 
         textViewName = (TextView) findViewById(R.id.textViewNameT);
 
-        TextView ss=findViewById(R.id.textViewDateT);
-        SimpleDateFormat format1 = new SimpleDateFormat( "yyyy-MM-dd HH:mm");
+        TextView ss = findViewById(R.id.textViewDateT);
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date time = new Date();
 
         String time1 = format1.format(time);
@@ -100,9 +100,9 @@ public class TwitchActivity extends AppCompatActivity {
 
         listview = (ListView) findViewById(R.id.commentListT);
 
-        imageButtonLike=findViewById(R.id.imageButtonLikeT);
-        imageButtonDisLike=findViewById(R.id.imageButtonDisLikeT);
-        declaration_posting=findViewById(R.id.declaration_posting);
+        imageButtonLike = findViewById(R.id.imageButtonLikeT);
+        imageButtonDisLike = findViewById(R.id.imageButtonDisLikeT);
+        declaration_posting = findViewById(R.id.declaration_posting);
 
         declaration_posting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,14 +116,14 @@ public class TwitchActivity extends AppCompatActivity {
                 builder.setPositiveButton("입력",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                final ProgressDialog pd=ProgressDialog.show(TwitchActivity.this,"","신고 내용을 보내는 중입니다.");
-                                Thread t=new Thread(){
+                                final ProgressDialog pd = ProgressDialog.show(TwitchActivity.this, "", "신고 내용을 보내는 중입니다.");
+                                Thread t = new Thread() {
                                     @Override
                                     public void run() {
                                         try {
                                             GMailSender gMailSender = new GMailSender("ghkdua059@gmail.com", "6013861z!");
-                                            gMailSender.sendMail("게시글 번호 : "+video_index+" 를(을) 신고합니다.",
-                                                    "신고 이유 : "+edittext.getText().toString(), "ghkdua1829@naver.com");
+                                            gMailSender.sendMail("게시글 번호 : " + video_index + " 를(을) 신고합니다.",
+                                                    "신고 이유 : " + edittext.getText().toString(), "ghkdua1829@naver.com");
                                             Looper.prepare();
                                             Toast.makeText(TwitchActivity.this, "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show();
                                             pd.dismiss();
@@ -150,25 +150,25 @@ public class TwitchActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-        if(u_v_status==1){
+        if (u_v_status == 1) {
             imageButtonLike.setImageResource(R.drawable.ic_thumb_up_selected);
             imageButtonLike.setTag(R.drawable.ic_thumb_up_selected);
             imageButtonDisLike.setImageResource(R.drawable.ic_thumb_down);
             imageButtonDisLike.setTag(R.drawable.ic_thumb_down);
-        }else if(u_v_status==2){
+        } else if (u_v_status == 2) {
             imageButtonLike.setImageResource(R.drawable.ic_thumb_up);
             imageButtonLike.setTag(R.drawable.ic_thumb_up);
             imageButtonDisLike.setImageResource(R.drawable.ic_thumb_down_selected);
             imageButtonDisLike.setTag(R.drawable.ic_thumb_down_selected);
-        }else{
+        } else {
             imageButtonLike.setImageResource(R.drawable.ic_thumb_up);
             imageButtonLike.setTag(R.drawable.ic_thumb_up);
             imageButtonDisLike.setImageResource(R.drawable.ic_thumb_down);
             imageButtonDisLike.setTag(R.drawable.ic_thumb_down);
         }
 
-        countLike=findViewById(R.id.countLikeT);
-        countDisLike=findViewById(R.id.countDisLikeT);
+        countLike = findViewById(R.id.countLikeT);
+        countDisLike = findViewById(R.id.countDisLikeT);
 
         countLike.setText(String.valueOf(likes));
         countDisLike.setText(String.valueOf(dislikes));
@@ -176,26 +176,24 @@ public class TwitchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if ( imageButtonLike.getTag().equals(R.drawable.ic_thumb_up_selected)) {     //좋아요 취소
+                if (imageButtonLike.getTag().equals(R.drawable.ic_thumb_up_selected)) {     //좋아요 취소
                     update_likes(5);
                     imageButtonLike.setImageResource(R.drawable.ic_thumb_up);
                     imageButtonLike.setTag(R.drawable.ic_thumb_up);
                     countLike.setText(String.valueOf(Integer.parseInt(countLike.getText().toString()) - 1));
-                }
-                else if(imageButtonLike.getTag().equals(R.drawable.ic_thumb_up) &&imageButtonDisLike.getTag().equals(R.drawable.ic_thumb_down_selected)){
+                } else if (imageButtonLike.getTag().equals(R.drawable.ic_thumb_up) && imageButtonDisLike.getTag().equals(R.drawable.ic_thumb_down_selected)) {
                     update_likes(3);
                     imageButtonLike.setImageResource(R.drawable.ic_thumb_up_selected);
-                    countLike.setText(String.valueOf(Integer.parseInt(countLike.getText().toString())+1));
+                    countLike.setText(String.valueOf(Integer.parseInt(countLike.getText().toString()) + 1));
                     imageButtonDisLike.setImageResource(R.drawable.ic_thumb_down);
-                    countDisLike.setText(String.valueOf(Integer.parseInt(countDisLike.getText().toString())-1));
+                    countDisLike.setText(String.valueOf(Integer.parseInt(countDisLike.getText().toString()) - 1));
                     imageButtonLike.setTag(R.drawable.ic_thumb_up_selected);
                     imageButtonDisLike.setTag(R.drawable.ic_thumb_down);
-                }
-                else{
+                } else {
                     update_likes(1);
                     imageButtonLike.setImageResource(R.drawable.ic_thumb_up_selected);      //좋아요 누르기
                     imageButtonLike.setTag(R.drawable.ic_thumb_up_selected);
-                    countLike.setText(String.valueOf(Integer.parseInt(countLike.getText().toString())+1));
+                    countLike.setText(String.valueOf(Integer.parseInt(countLike.getText().toString()) + 1));
                 }
             }
         });
@@ -203,31 +201,27 @@ public class TwitchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if ( imageButtonDisLike.getTag().equals(R.drawable.ic_thumb_down_selected) ){    //싫어요 취소
+                if (imageButtonDisLike.getTag().equals(R.drawable.ic_thumb_down_selected)) {    //싫어요 취소
                     update_likes(6);
                     imageButtonDisLike.setImageResource(R.drawable.ic_thumb_down);
                     imageButtonDisLike.setTag(R.drawable.ic_thumb_down);
-                    countDisLike.setText(String.valueOf(Integer.parseInt(countDisLike.getText().toString())-1));
-                }
-                else if(imageButtonDisLike.getTag().equals(R.drawable.ic_thumb_down) &&imageButtonLike.getTag().equals(R.drawable.ic_thumb_up_selected)){
+                    countDisLike.setText(String.valueOf(Integer.parseInt(countDisLike.getText().toString()) - 1));
+                } else if (imageButtonDisLike.getTag().equals(R.drawable.ic_thumb_down) && imageButtonLike.getTag().equals(R.drawable.ic_thumb_up_selected)) {
                     update_likes(4);
                     imageButtonLike.setImageResource(R.drawable.ic_thumb_up);
                     countLike.setText(String.valueOf(Integer.parseInt(countLike.getText().toString()) - 1));
                     imageButtonDisLike.setImageResource(R.drawable.ic_thumb_down_selected);
-                    countDisLike.setText(String.valueOf(Integer.parseInt(countDisLike.getText().toString())+1));
+                    countDisLike.setText(String.valueOf(Integer.parseInt(countDisLike.getText().toString()) + 1));
                     imageButtonLike.setTag(R.drawable.ic_thumb_up);
                     imageButtonDisLike.setTag(R.drawable.ic_thumb_down_selected);
-                }
-                else{             //i가 1일때 싫어요 클릭이 안된 상태
+                } else {             //i가 1일때 싫어요 클릭이 안된 상태
                     update_likes(2);
                     imageButtonDisLike.setImageResource(R.drawable.ic_thumb_down_selected);      //싫어요 누르기
                     imageButtonDisLike.setTag(R.drawable.ic_thumb_down_selected);
-                    countDisLike.setText(String.valueOf(Integer.parseInt(countDisLike.getText().toString())+1));
+                    countDisLike.setText(String.valueOf(Integer.parseInt(countDisLike.getText().toString()) + 1));
                 }
             }
         });
-
-
 
 
         final EditText descText = (EditText) findViewById(R.id.descTextT);
@@ -243,7 +237,7 @@ public class TwitchActivity extends AppCompatActivity {
                     }
                     ArrayList<CommentModel> cListData = new ArrayList<>();
                     JSONArray jsonArray = new JSONArray(response);
-                    for(int i=0; i<jsonArray.length(); i++) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject commentObject = jsonArray.getJSONObject(i);
                         String video_id = commentObject.getString("video_id");
                         String author = commentObject.getString("author");
@@ -254,13 +248,13 @@ public class TwitchActivity extends AppCompatActivity {
                         String commentDisLike = commentObject.getString("commentDisLike");
                         String status = commentObject.getString("status");
 
-                        CommentModel commentModel = new CommentModel(video_id,author,_index, desc,writetime,commentLike,commentDisLike,status);
+                        CommentModel commentModel = new CommentModel(video_id, author, _index, desc, writetime, commentLike, commentDisLike, status);
                         cListData.add(commentModel);
                     }
-                    if(cListData.isEmpty()) size = 0;
+                    if (cListData.isEmpty()) size = 0;
                     else size = cListData.size();
 
-                    CommentAdapter adapter = new CommentAdapter(cListData,TwitchActivity.this);
+                    CommentAdapter adapter = new CommentAdapter(cListData, TwitchActivity.this);
                     listview.setAdapter(adapter);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -268,11 +262,11 @@ public class TwitchActivity extends AppCompatActivity {
             }
         };
 
-        final CommentRequest commentRequest = new CommentRequest(video_index, userName,responseListener);
+        final CommentRequest commentRequest = new CommentRequest(video_index, userName, responseListener);
         RequestQueue queue = Volley.newRequestQueue(TwitchActivity.this);
         queue.add(commentRequest);
 
-        insertButton.setOnClickListener(new View.OnClickListener(){
+        insertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String desc = descText.getText().toString();
@@ -286,7 +280,7 @@ public class TwitchActivity extends AppCompatActivity {
                             }
                             ArrayList<CommentModel> cListData = new ArrayList<>();
                             JSONArray jsonArray = new JSONArray(response);
-                            for(int i=0; i<jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject commentObject = jsonArray.getJSONObject(i);
                                 String video_id = commentObject.getString("video_id");
                                 String author = commentObject.getString("author");
@@ -297,27 +291,26 @@ public class TwitchActivity extends AppCompatActivity {
                                 String commentDisLike = commentObject.getString("commentDisLike");
                                 String status = commentObject.getString("status");
 
-                                CommentModel commentModel = new CommentModel(video_id,author,_index, desc,writetime,commentLike,commentDisLike,status);
+                                CommentModel commentModel = new CommentModel(video_id, author, _index, desc, writetime, commentLike, commentDisLike, status);
                                 cListData.add(commentModel);
                             }
-                            if(cListData.isEmpty()) size = 0;
+                            if (cListData.isEmpty()) size = 0;
                             else size = cListData.size();
 
-                            CommentAdapter adapter = new CommentAdapter(cListData,TwitchActivity.this);
+                            CommentAdapter adapter = new CommentAdapter(cListData, TwitchActivity.this);
                             listview.setAdapter(adapter);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 };
-                CommentInsertRequest commentInsertRequest = new CommentInsertRequest(video_index, size+1, userName, desc,userName, responseListener1);
+                CommentInsertRequest commentInsertRequest = new CommentInsertRequest(video_index, size + 1, userName, desc, userName, responseListener1);
                 RequestQueue queue = Volley.newRequestQueue(TwitchActivity.this);
                 queue.add(commentInsertRequest);
 
                 descText.setText(null);
             }
         });
-
 
 
         web.getSettings().setJavaScriptEnabled(true);
@@ -331,28 +324,39 @@ public class TwitchActivity extends AppCompatActivity {
 //            getWindow().addFlags(16777216);
 //        }
 
+//        긴 트위치 영상
+//        final String html1 = "<iframe frameborder=\"0\"\n" +
+//                "scrolling=\"no\"\n" +
+//                "id=\"chat_embed\"\n" +
+//                "allowfullscreen=\"true\"\n" +
+//                "src=\"https://player.twitch.tv/?autoplay=false&video=v";
+//        final String html2 = "\"\n" +
+//                "height=\"200\"\n" +
+//                "width=\"400\">\n" +
+//                "</iframe>";
 
+        //트위치 클립
         final String html1 = "<iframe frameborder=\"0\"\n" +
                 "scrolling=\"no\"\n" +
                 "id=\"chat_embed\"\n" +
                 "allowfullscreen=\"true\"\n" +
-                "src=\"https://player.twitch.tv/?autoplay=false&video=v";
-        final String html2 = "\"\n" +
+                "src=\"https://clips.twitch.tv/embed?clip=";
+        final String html2 = "&tt_medium=clips_api&tt_content=embed\"\n" +
                 "height=\"200\"\n" +
                 "width=\"400\">\n" +
                 "</iframe>";
 
-//        String[] split = twitch_URL.split("/");
-        web.loadData(html1 + videoId + html2, "text/html", null);
+        web.loadData(html1 + videoID + html2, "text/html", null);
     }
-    public void update_likes(final int target){
-        Retrofit retrofit=new Retrofit.Builder()
+
+    public void update_likes(final int target) {
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(RetrofitService.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        RetrofitService retrofitService=retrofit.create(RetrofitService.class);
-        Call<JsonObject> call=retrofitService.updatelikes(userName,String.valueOf(video_index),String.valueOf(target));
+        RetrofitService retrofitService = retrofit.create(RetrofitService.class);
+        Call<JsonObject> call = retrofitService.updatelikes(userName, String.valueOf(video_index), String.valueOf(target));
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {

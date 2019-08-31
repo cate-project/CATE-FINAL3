@@ -82,18 +82,20 @@ public class DetailsActivity extends YouTubeBaseActivity implements YouTubePlaye
     public static int video_index;
     int size, u_v_status,likes,dislikes;
     public static String userName = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        youtubeDataModel = getIntent().getParcelableExtra(YoutubeDataModel.class.toString());
-        Log.e("", youtubeDataModel.getDescription());
+
+        userName = MainActivity.strName;
+
         Intent intent = getIntent();
-        userName = intent.getStringExtra("userName");
-        video_index = intent.getIntExtra("video_index", 0);
+        youtubeDataModel = intent.getParcelableExtra(YoutubeDataModel.class.toString());
+        video_index = youtubeDataModel.getVideo_index();
+        likes = youtubeDataModel.getLikes();
+        dislikes = youtubeDataModel.getDislikes();
         u_v_status = intent.getIntExtra("u_v_status",0);
-        likes = intent.getIntExtra("likes",0);
-        dislikes = intent.getIntExtra("dislikes",0);
 
         mYoutubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_player);
         mYoutubePlayerView.initialize(GOOGLE_YOUTUBE_API, this);

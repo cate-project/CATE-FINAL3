@@ -113,6 +113,8 @@ public class YoutubeDataModel implements Parcelable {
         dest.writeString(video_id);
         dest.writeString(video_kind);
         dest.writeInt(video_index);
+        dest.writeInt(likes);
+        dest.writeInt(dislikes);
     }
 
     public YoutubeDataModel() {
@@ -133,6 +135,8 @@ public class YoutubeDataModel implements Parcelable {
         this.video_id = in.readString();
         this.video_kind = in.readString();
         this.video_index = in.readInt();
+        this.likes = in.readInt();
+        this.dislikes = in.readInt();
     }
 
     public static final Creator<YoutubeDataModel> CREATOR = new Creator<YoutubeDataModel>() {

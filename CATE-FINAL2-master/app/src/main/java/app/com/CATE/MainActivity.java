@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -23,13 +22,16 @@ import app.com.youtubeapiv3.R;
 public class MainActivity extends AppCompatActivity {
     public static String strName;
     private TabLayout tabLayout = null;
-    private ViewPager viewPager = null;
+    public static ViewPager viewPager = null;
     private Toolbar toolbar = null;
     public String category, channel;
     public static int video_index;
 
     TextView txtResult;
     public ArrayList<YoutubeDataModel> listData = new ArrayList<>();
+
+    public static Intent likeVideoIntent;
+    public static Intent LibraryCommentIntent;
 
     public String GOOGLE_YOUTUBE_API_KEY ="AIzaSyDDNXQW5vUsBy91h_swoSAc_uFFAG14Clo";  //here you should use your api key for testing purpose you can use this api also
     public String CHANNEL_ID = "UCEgdi0XIXXZ-qJOFPf4JSKw";  //here you should use your channel id for testing purpose you can use this api also
@@ -51,14 +53,17 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_search_24px); // 왼쪽 버튼 이미지 설정
         actionBar.setDisplayShowTitleEnabled(false);    // 타이틀 안보이게 하기
 
+        likeVideoIntent = new Intent(MainActivity.this, LibraryLikeVideoActivity.class);
+        LibraryCommentIntent = new Intent(MainActivity.this, LibraryCommentActivity.class);
+
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
         //setting the tabs title
         tabLayout.addTab(tabLayout.newTab().setText("Home"));
         tabLayout.addTab(tabLayout.newTab().setText("Search"));
-        tabLayout.addTab(tabLayout.newTab().setText("Live"));
         tabLayout.addTab(tabLayout.newTab().setText("Category"));
+        tabLayout.addTab(tabLayout.newTab().setText("Library"));
 
         //setup the view pager
         final PagerAdapter adapter = new app.com.CATE.adapters.PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
@@ -69,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-        }
+            }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -130,6 +135,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }

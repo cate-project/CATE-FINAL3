@@ -33,6 +33,8 @@
         <activity
             android:name="app.com.CATE.TwitchActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="app.com.CATE.LibraryLikeVideoActivity"/>
+        <activity android:name="app.com.CATE.LibraryCommentActivity"/>
     </application>
 
 </manifest>

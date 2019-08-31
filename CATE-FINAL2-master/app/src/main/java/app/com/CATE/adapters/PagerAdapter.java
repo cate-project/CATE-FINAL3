@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import app.com.CATE.fragments.HomeFragment;
-import app.com.CATE.fragments.LiveFragment;
+import app.com.CATE.fragments.LibraryFragment;
 import app.com.CATE.fragments.SearchFragment;
 import app.com.CATE.fragments.CategoryFragment;
 
@@ -32,10 +32,10 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 SearchFragment tab2 = new SearchFragment();
                 return tab2;
             case 2:
-                LiveFragment tab3 = new LiveFragment();
+                CategoryFragment tab3 = new CategoryFragment();
                 return tab3;
             case 3:
-                CategoryFragment tab4 = new CategoryFragment();
+                LibraryFragment tab4 = new LibraryFragment();
                 return tab4;
             default:
                 return null;

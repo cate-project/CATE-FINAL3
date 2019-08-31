@@ -181,7 +181,7 @@ public class AddDialog extends Dialog implements View.OnClickListener {
                 if (urlEt.getText().toString().indexOf("www.youtube.com") > 0) {
 
                     kind_video = "YOUTUBE";
-                    kind_thumbnail = "https://i.ytimg.com/vi/" + urlEt.getText().toString().substring(urlEt.getText().toString().indexOf("=") + 1) + "/hqdefault.jpg";
+                    kind_thumbnail = "https://i.ytimg.com/vi/" + urlEt.getText().toString().substring(urlEt.getText().toString().indexOf("=") + 1) + "/mqdefault.jpg";
 
                     VideoChugaRequest VideoChugaRequest = new VideoChugaRequest(titleEt.getText().toString(), urlEt.getText().toString(),
                             tagEt.getText().toString(), kind_video, MainActivity.strName, kind_thumbnail, responseListener);

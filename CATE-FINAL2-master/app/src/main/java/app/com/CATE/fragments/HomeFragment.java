@@ -54,6 +54,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HomeFragment extends Fragment {
 
@@ -183,32 +184,40 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
                 try {
                     for(int i=start; i < start+3; i++) {
-                        JsonObject jsonObject = response.body().get(i).getAsJsonObject();
+                        JsonObject object = response.body().get(i).getAsJsonObject();
 
-                        String videoID = "";
-                        int videoIndex = Integer.parseInt(jsonObject.get("video_id").getAsString());
-                        String videoTitle = jsonObject.get("video_title").getAsString();
-                        String videoURL = jsonObject.get("video_url").getAsString();
-                        String videoKind = jsonObject.get("video_kind").getAsString();
-                        String thumbnail = jsonObject.get("thumbnail").getAsString();
+                        YoutubeDataModel youtubeObject = new YoutubeDataModel();
+                        String thumbnail = "";
+                        String video_id = "";
+                        String cateName, video_kind, cateDetail;
+                        int video_index, likes, dislikes;
 
-                        if (videoKind.equals("YOUTUBE")) {
-                            videoID = videoURL.substring(videoURL.indexOf("=") + 1);
+                        cateName = object.get("title").getAsString();
+                        video_kind = object.get("kind").getAsString();
+                        cateDetail = object.get("url").getAsString();
+                        thumbnail = object.get("thumbnail").getAsString().replace("\\", "");
+                        video_index = Integer.parseInt(object.get("id").getAsString());
+                        likes = Integer.parseInt(object.get("likes").getAsString());
+                        dislikes = Integer.parseInt(object.get("dislikes").getAsString());
+
+                        if (video_kind.equals("YOUTUBE")) {
+                            video_id = cateDetail.substring(cateDetail.indexOf("=") + 1);
                         }
-                        if (videoKind.equals("TWITCH")) {
-                            String[] split = videoURL.split("/");
-                            videoID = split[split.length - 1];
+                        if (video_kind.equals("TWITCH")) {
+                            String[] split = cateDetail.split("/");
+                            video_id = split[split.length - 1];
                         }
 
-                        YoutubeDataModel youtubeDataModel = new YoutubeDataModel();
-                        youtubeDataModel.setVideo_index(videoIndex);
-                        youtubeDataModel.setTitle(videoTitle);
-                        youtubeDataModel.setThumbnail(thumbnail);
-                        youtubeDataModel.setVideo_id(videoID);
-                        youtubeDataModel.setVideo_kind(videoKind);
+                        youtubeObject.setVideo_index(video_index);
+                        youtubeObject.setTitle(cateName);
+                        youtubeObject.setThumbnail(thumbnail);
+                        youtubeObject.setVideo_id(video_id);
+                        youtubeObject.setVideo_kind(video_kind);
+                        youtubeObject.setLikes(likes);
+                        youtubeObject.setDislikes(dislikes);
 
-                        mListData.add(youtubeDataModel);
-//                                initList(mListData);
+                        mListData.add(youtubeObject);
+//                        initList(mListData);
                     } new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -246,6 +255,7 @@ public class HomeFragment extends Fragment {
                 preView = view;
                 progressBarstart.setVisibility(view.VISIBLE);
                 view.setBackgroundColor(Color.LTGRAY);
+
                 category_selected=category;
                 mListData = new ArrayList<>();
 
@@ -260,31 +270,39 @@ public class HomeFragment extends Fragment {
                     public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
                         try {
                             for (int i = start; i < start + 3; i++) {
-                                JsonObject jsonObject = response.body().get(i).getAsJsonObject();
+                                JsonObject object = response.body().get(i).getAsJsonObject();
 
-                                String videoID = "";
-                                int videoIndex = Integer.parseInt(jsonObject.get("video_id").getAsString());
-                                String videoTitle = jsonObject.get("video_title").getAsString();
-                                String videoURL = jsonObject.get("video_url").getAsString();
-                                String videoKind = jsonObject.get("video_kind").getAsString();
-                                String thumbnail = jsonObject.get("thumbnail").getAsString();
+                                YoutubeDataModel youtubeObject = new YoutubeDataModel();
+                                String thumbnail = "";
+                                String video_id = "";
+                                String cateName, video_kind, cateDetail;
+                                int video_index, likes, dislikes;
 
-                                if (videoKind.equals("YOUTUBE")) {
-                                    videoID = videoURL.substring(videoURL.indexOf("=") + 1);
+                                cateName = object.get("title").getAsString();
+                                video_kind = object.get("kind").getAsString();
+                                cateDetail = object.get("url").getAsString();
+                                thumbnail = object.get("thumbnail").getAsString().replace("\\", "");
+                                video_index = Integer.parseInt(object.get("id").getAsString());
+                                likes = Integer.parseInt(object.get("likes").getAsString());
+                                dislikes = Integer.parseInt(object.get("dislikes").getAsString());
+
+                                if (video_kind.equals("YOUTUBE")) {
+                                    video_id = cateDetail.substring(cateDetail.indexOf("=") + 1);
                                 }
-                                if (videoKind.equals("TWITCH")) {
-                                    String[] split = videoURL.split("/");
-                                    videoID = split[split.length - 1];
+                                if (video_kind.equals("TWITCH")) {
+                                    String[] split = cateDetail.split("/");
+                                    video_id = split[split.length - 1];
                                 }
 
-                                YoutubeDataModel youtubeDataModel = new YoutubeDataModel();
-                                youtubeDataModel.setVideo_index(videoIndex);
-                                youtubeDataModel.setTitle(videoTitle);
-                                youtubeDataModel.setThumbnail(thumbnail);
-                                youtubeDataModel.setVideo_id(videoID);
-                                youtubeDataModel.setVideo_kind(videoKind);
+                                youtubeObject.setVideo_index(video_index);
+                                youtubeObject.setTitle(cateName);
+                                youtubeObject.setThumbnail(thumbnail);
+                                youtubeObject.setVideo_id(video_id);
+                                youtubeObject.setVideo_kind(video_kind);
+                                youtubeObject.setLikes(likes);
+                                youtubeObject.setDislikes(dislikes);
 
-                                mListData.add(youtubeDataModel);
+                                mListData.add(youtubeObject);
                             }
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -342,15 +360,10 @@ public class HomeFragment extends Fragment {
                     call.enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            JsonObject jsonObject=response.body();
+                            JsonObject jsonObject = response.body();
                             Intent intent = new Intent(getActivity(), DetailsActivity.class);
                             intent.putExtra(YoutubeDataModel.class.toString(), youtubeDataModel);
-                            intent.putExtra("userName", MainActivity.strName);
-                            intent.putExtra("video_index", youtubeDataModel.getVideo_index());
-                            MainActivity.video_index=youtubeDataModel.getVideo_index();
                             intent.putExtra("u_v_status", jsonObject.get("status").getAsInt());
-                            intent.putExtra("likes", jsonObject.get("likes").getAsInt());
-                            intent.putExtra("dislikes", jsonObject.get("dislikes").getAsInt());
                             startActivity(intent);
                         }
 
@@ -373,12 +386,7 @@ public class HomeFragment extends Fragment {
                             JsonObject jsonObject=response.body();
                             Intent intent = new Intent(getActivity(), TwitchActivity.class);
                             intent.putExtra(YoutubeDataModel.class.toString(), youtubeDataModel);
-                            intent.putExtra("userName", MainActivity.strName);
-                            intent.putExtra("video_index", youtubeDataModel.getVideo_index());
-                            MainActivity.video_index=youtubeDataModel.getVideo_index();
                             intent.putExtra("u_v_status", jsonObject.get("status").getAsInt());
-                            intent.putExtra("likes", jsonObject.get("likes").getAsInt());
-                            intent.putExtra("dislikes", jsonObject.get("dislikes").getAsInt());
                             startActivity(intent);
                         }
 

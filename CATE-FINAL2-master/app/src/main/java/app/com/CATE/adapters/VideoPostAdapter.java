@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -25,13 +26,19 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
     private ArrayList<YoutubeDataModel> dataSet;
     private Context mContext = null;
     private final OnItemClickListener listener;
-
+    private int mode;
 
     public VideoPostAdapter(Context mContext, ArrayList<YoutubeDataModel> dataSet, OnItemClickListener listener) {
         this.dataSet = dataSet;
         this.mContext = mContext;
         this.listener = listener;
+    }
 
+    public VideoPostAdapter(Context mContext, ArrayList<YoutubeDataModel> dataSet, int mode, OnItemClickListener listener) {
+        this.dataSet = dataSet;
+        this.mContext = mContext;
+        this.listener = listener;
+        this.mode = mode;
     }
 
     @Override
@@ -59,6 +66,16 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
 
         //TODO: image will be downloaded from url
         Picasso.with(mContext).load(object.getThumbnail()).into(ImageThumb);
+
+        if(mode == 1){
+            LinearLayout youtube_post_layout = holder.youtube_post_layout;
+            RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) youtube_post_layout.getLayoutParams();
+            lp.height = 500;
+            lp.width = 750;
+            youtube_post_layout.setLayoutParams(lp);
+
+            textViewTitle.setTextSize(20);
+        }
     }
 
     @Override
@@ -71,6 +88,7 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
         TextView textViewDes;
         TextView textViewDate;
         ImageView ImageThumb;
+        LinearLayout youtube_post_layout;
 
         public YoutubePostHolder(View itemView) {
             super(itemView);
@@ -78,7 +96,7 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
             this.textViewDes = (TextView) itemView.findViewById(R.id.textViewDes);
             this.textViewDate = (TextView) itemView.findViewById(R.id.textViewDate);
             this.ImageThumb = (ImageView) itemView.findViewById(R.id.ImageThumb);
-
+            this.youtube_post_layout = (LinearLayout) itemView.findViewById(R.id.youtube_post_layout);
         }
 
         public void bind(final YoutubeDataModel item, final OnItemClickListener listener) {

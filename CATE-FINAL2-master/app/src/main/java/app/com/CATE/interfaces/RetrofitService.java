@@ -84,6 +84,15 @@ public interface RetrofitService {
             @Query("category_name") String categoryName
     );
 
+    @GET("fow_like_video.php")
+    Call<JsonArray> getLikeVideo(
+            @Query("user_name") String userName
+    );
+
+    @GET("fow_search_get_video.php")
+    Call<JsonArray> getSearchVideo(
+            @Query("target") String target
+    );
 }
 
 
