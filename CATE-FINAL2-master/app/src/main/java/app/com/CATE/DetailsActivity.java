@@ -131,7 +131,7 @@ public class DetailsActivity extends YouTubeBaseActivity implements YouTubePlaye
                 builder.setPositiveButton("입력",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                final ProgressDialog pd=ProgressDialog.show(DetailsActivity.this,"","신고 내용을 보내는 중입니다.");
+                                final ProgressDialog pd=ProgressDialog.show(DetailsActivity.this,""," 신고 내용을 보내는 중입니다.");
                                 Thread t=new Thread(){
                                     @Override
                                     public void run() {

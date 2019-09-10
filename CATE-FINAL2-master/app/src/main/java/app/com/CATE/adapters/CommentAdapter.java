@@ -156,7 +156,7 @@ public class CommentAdapter extends BaseAdapter {
         declaration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final ProgressDialog pd=ProgressDialog.show(mContext,"","신고 내용을 보내는 중입니다.");
+
 
                 final EditText edittext = new EditText(mContext);
 
@@ -171,6 +171,7 @@ public class CommentAdapter extends BaseAdapter {
                                     @Override
                                     public void run() {
                                         try {
+                                            final ProgressDialog pd=ProgressDialog.show(mContext,"","신고 내용을 보내는 중입니다.");
                                             GMailSender gMailSender = new GMailSender("ghkdua059@gmail.com", "6013861z!");
                                             //GMailSender.sendMail(제목, 본문내용, 받는사람);
                                             gMailSender.sendMail("게시글 번호 : "+commentModel.getVideo_id()+" 댓글번호 : "
@@ -210,6 +211,9 @@ public class CommentAdapter extends BaseAdapter {
         if(MainActivity.strName.equalsIgnoreCase(commentModel.getAuthor())){
             Log.e("ss : ",commentModel.getAuthor());
             delete_comment.setVisibility(View.VISIBLE);
+        }
+        else{
+            delete_comment.setVisibility(View.INVISIBLE);
         }
         textAuthor.setText(commentModel.getAuthor());
         textDesc.setText(commentModel.getDesc());
